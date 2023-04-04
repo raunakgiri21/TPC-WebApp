@@ -17,7 +17,7 @@ const RegisterStudent = () => {
     const [backlogCount,setBacklogCount] = useState(0);
     const [_12thPercent,set_12thPercent] = useState('');
     const [_10thPercent,set_10thPercent] = useState('');
-    const [isTier1Placed,setIsTier1Placed] = useState('');
+    const [isTier1Placed,setIsTier1Placed] = useState(false);
     const [isTier2Placed,setIsTier2Placed] = useState(0);
     const [isBlacklisted,setIsBlacklisted] = useState(false);
 

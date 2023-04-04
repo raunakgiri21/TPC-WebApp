@@ -81,7 +81,7 @@ const registerUser = async(req,res) => {
             _10thPercent: user._10thPercent,
             isBlacklisted: user.isBlacklisted,
             isT1Placed: user.isT1Placed,
-            isT2Placed: t2[user.isT2Placed],
+            isT2Placed: user.isT2Placed,
             address: user.address,
         }});
     } catch (error) {

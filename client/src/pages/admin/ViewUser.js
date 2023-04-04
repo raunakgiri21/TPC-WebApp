@@ -64,9 +64,9 @@ const ViewUser = () => {
     const submitButtonHandler = async(e) => {
         // e.preventDefault();
         try {
-            const password = name+String(rollNo)
+            // const password = name.split(' ').join('') + String(rollNo);
             const _data = {
-                name,email,password,rollNo,branch,caste,dob,overAllCGPA,backlogCount,_12thPercent,_10thPercent,isT1Placed: isTier1Placed,isT2Placed: isTier2Placed,isBlacklisted,address
+                name,email,rollNo,branch,caste,dob,overAllCGPA,backlogCount,_12thPercent,_10thPercent,isT1Placed: isTier1Placed,isT2Placed: isTier2Placed,isBlacklisted,address
             }
             const {data} = await axios.put(`/auth/register-user/${params.userID}`,_data)
             toast.success(`SuccessFully Updated User!`)
@@ -82,7 +82,8 @@ const ViewUser = () => {
             toast.success(`Deleted ${data?.user?.name}`)
             navigate('/admin/dashboard')
         } catch (error) {
-            
+            console.log(error)
+            toast.error(error?.response?.data?.error || "Error!")
         }
     }
 

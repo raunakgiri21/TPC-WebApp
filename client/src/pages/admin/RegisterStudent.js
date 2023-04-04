@@ -24,7 +24,7 @@ const RegisterStudent = () => {
     const submitButtonHandler = async(e) => {
         // e.preventDefault();
         try {
-            const password = name+String(rollNo)
+            const password = name.split(' ').join('') + String(rollNo)
             const _data = {
                 name,email,password,rollNo,branch,caste,dob,overAllCGPA,backlogCount,_12thPercent,_10thPercent,isT1Placed: isTier1Placed,isT2Placed: isTier2Placed,isBlacklisted
             }

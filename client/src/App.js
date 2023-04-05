@@ -19,6 +19,7 @@ import RegisterStudent from "./pages/admin/RegisterStudent";
 function App() {
   return (
     //checking 123 by sandip. once the pr is merged lemme know on whatsapp
+    //oopsie one more check
     <BrowserRouter>
       <Menu />
       <Toaster />

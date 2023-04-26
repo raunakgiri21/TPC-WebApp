@@ -12,9 +12,9 @@ const getPost = async(req,res) => {
 
 const createPost = async(req,res) => {
     try {
-        const body = req.body;
-        const drives = await Drive.find({});
-        const postNo = drives.length + 1;
+        const body = req.body.body;
+        const drives = await Drive.find({}).limit(1).sort({$natural:-1});
+        const postNo = drives[0].postNo + 1;
         const _applyBefore = parseInt(new Date().valueOf()) + body.applyBefore*3600*1000;
         // console.log(_applyBefore,body.applyBefore,new Date(_applyBefore).toLocaleString("en-US"))
         const drive = await Drive.create({...body,postNo: postNo, applyBefore: _applyBefore})

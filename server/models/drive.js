@@ -17,7 +17,12 @@ const driveSchema = new mongoose.Schema({
         required: true,
     },
     tier: {
-        type: String,
+        type: Number,
+        trim: true,
+        required: true,
+    },
+    tierType: {
+        type: Number, // 0 for 'No', 1 for 'Core', 2 for ' IT', 3 for 'Others'
         trim: true,
         required: true,
     },

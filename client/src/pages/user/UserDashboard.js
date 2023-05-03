@@ -17,7 +17,7 @@ const UserDashboard = () => {
     return (
         <>
         
-        <div className="container-fluid">
+        <div className="container-fluid" style={{maxHeight: '92vh', overflowY: 'auto'}}>
             <div className="row">
                 <div className="col">
                     <div className="p-3 mt-2 mb-2 bg-light">

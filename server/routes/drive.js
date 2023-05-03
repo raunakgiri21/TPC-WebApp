@@ -5,12 +5,13 @@ const router = express.Router();
 
 
 // controllers
-const {createPost,getPost,updatePost,deletePost} = require('../controllers/drive');
+const {createPost,getPost,getPostByID,updatePost,deletePost} = require('../controllers/drive');
 const { authenticationMiddleware, isAdminMiddleware } = require('../middleware/auth');
 
 
 // routes
 router.get('/',authenticationMiddleware,getPost)
+router.get('/:driveID',authenticationMiddleware,getPostByID)
 router.post('/post',authenticationMiddleware,isAdminMiddleware,createPost)
 router.put('/update-post/:postID',authenticationMiddleware,isAdminMiddleware,updatePost)
 router.delete('/delete-post/:postID',authenticationMiddleware,isAdminMiddleware,deletePost)

@@ -8,7 +8,7 @@ const SideMenu = () => {
         {auth?.user?.role === 'Admin'?
         <ul className="list-group h-100">
             <li>
-                <NavLink className='list-group-item list-group-item-secondary list-group-item-action' to='/'>Drives</NavLink>
+                <NavLink className='list-group-item list-group-item-secondary list-group-item-action' to='/drives'>Drives</NavLink>
             </li>
             <li>  
                 <NavLink className='list-group-item list-group-item-secondary list-group-item-action' to='/admin/create-drive'>Create Drive</NavLink>
@@ -20,7 +20,7 @@ const SideMenu = () => {
         :
         <ul className="list-group h-100">
             <li>
-                <NavLink className='list-group-item list-group-item-secondary list-group-item-action' to='/'>Drives</NavLink>
+                <NavLink className='list-group-item list-group-item-secondary list-group-item-action' to='/drives'>Drives</NavLink>
             </li>
             <li>  
                 <NavLink className='list-group-item list-group-item-secondary list-group-item-action' to='/user-drives'>My Drives</NavLink>

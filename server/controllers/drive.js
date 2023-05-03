@@ -2,7 +2,7 @@ const Drive = require('../models/drive')
 
 const getPost = async(req,res) => {
     try {
-        const drive = await Drive.find({});
+        const drive = await Drive.find({}).sort('-postNo');
         res.status(200).json({msg: "Success",drive})
     } catch (error) {
         res.status(400).json({msg: "error while getting posts"})
@@ -10,6 +10,16 @@ const getPost = async(req,res) => {
     }
 }
 
+const getPostByID = async(req,res) => {
+    try {
+        const drive = await Drive.findById(req.params.driveID);
+        res.status(200).json({msg: "Success",drive})
+    } catch (error) {
+        res.status(400).json({msg: "error while getting post data"})
+        console.log(error)
+    }
+}
+ 
 const createPost = async(req,res) => {
     try {
         const body = req.body.body;
@@ -56,4 +66,4 @@ const deletePost = async(req,res) => {
     }
 }
 
-module.exports = {createPost, getPost, updatePost, deletePost}
+module.exports = {createPost, getPost, getPostByID, updatePost, deletePost}

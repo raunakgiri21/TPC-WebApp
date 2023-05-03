@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../../context/auth"
 // import UserMenu from "../../components/nav/UserMenu";
-import TableComponent from "../../components/table/table";
+import TableComponent from "../../components/table/Table";
 import moment from 'moment'
 import { Checkbox, InputNumber, Input, Button } from "antd";
 

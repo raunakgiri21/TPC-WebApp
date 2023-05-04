@@ -69,7 +69,13 @@ const driveSchema = new mongoose.Schema({
         type: Date,
         trim: true, 
         required: true,
-    }
+    },
+    appliedBy: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User'
+        }
+    ]
 
 },{timestamps: true})
 

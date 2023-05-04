@@ -39,16 +39,42 @@ const updatePost = async(req,res) => {
     try {
         const body = req.body;
         const postID = req.params.postID;
-        if(body.applyBefore){
-            const _applyBefore = parseInt(new Date().valueOf()) + body.applyBefore*3600*1000;
-            const drive = await Drive.findByIdAndUpdate(postID,{...body, applyBefore: _applyBefore},{new: true});
+        if(body?.body?.applyBefore){
+            const _applyBefore = parseInt(new Date().valueOf()) + body?.body?.applyBefore*3600*1000;
+            const drive = await Drive.findByIdAndUpdate(postID,{...body.body, applyBefore: _applyBefore},{new: true});
             return res.status(200).json({msg: "Success",drive})
         }
-        const drive = await Drive.findByIdAndUpdate(postID,{...body});
+        const drive = await Drive.findByIdAndUpdate(postID,{...body.body},{new: true});
         return res.status(200).json({msg: "Success",drive})
     } catch (error) {
         res.status(400).json({msg: "error while updating the post"})
         console.log(error)
+    }
+}
+
+const applyToPost = async(req,res) => {
+    try {
+        const {userID,driveID} = req.body;
+        const drive = await Drive.findByIdAndUpdate(driveID,
+            { $addToSet: { appliedBy: userID } },
+            {new: true})
+        res.status(200).json({msg: 'success',drive})    
+    } catch (error) {
+        res.status(400).json({msg: "error while applying the post"})
+        console.log(error) 
+    }
+}
+
+const withdrawFromPost = async(req,res) => {
+    try {
+        const {userID,driveID} = req.body;
+        const drive = await Drive.findByIdAndUpdate(driveID,
+            { $pull: { appliedBy: userID } },
+            {new: true})
+        res.status(200).json({msg: 'success',drive})    
+    } catch (error) {
+        res.status(400).json({msg: "error while withdrawing the post"})
+        console.log(error) 
     }
 }
 
@@ -66,4 +92,4 @@ const deletePost = async(req,res) => {
     }
 }
 
-module.exports = {createPost, getPost, getPostByID, updatePost, deletePost}
+module.exports = {createPost, getPost, getPostByID, updatePost, deletePost, applyToPost, withdrawFromPost}

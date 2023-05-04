@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
+import { useAuth } from '../../context/auth';
 const columns = [
   {
     title: 'Post No.',
@@ -25,6 +26,11 @@ const columns = [
     key: 'tierType',
   },
   {
+    title: 'Status',
+    dataIndex: 'status',
+    key: 'status',
+  },
+  {
     title: 'Action',
     dataIndex: '',
     key: 'x',
@@ -43,6 +49,7 @@ const data = [
 const DrivesTable = () => {
     // state
     const [data,setData] = useState([])
+    const [auth,setAuth] = useAuth()
 
     useEffect(() => {
         loadDrives()
@@ -61,6 +68,7 @@ const DrivesTable = () => {
                     name: d.name,
                     tier: _tier[d.tier - 1],
                     tierType: _tierType[d.tierType - 1],
+                    status: d?.appliedBy?.includes(auth?.user?.userID) ? 'Applied' : '-',
                 }
             })
             setData(_data)

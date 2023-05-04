@@ -12,6 +12,7 @@ import AdminDashboard from "./pages/admin/AdminDashboard";
 import ViewUser from "./pages/admin/ViewUser";
 import AdminRoute from "./components/routes/AdminRoute";
 import CreateDrive from "./pages/admin/CreateDrive";
+import EditDrive from "./pages/admin/EditDrive";
 import RegisterStudent from "./pages/admin/RegisterStudent";
 import Drives from "./pages/user/Drives";
 import ViewDrive from "./pages/user/ViewDrive";
@@ -35,6 +36,7 @@ function App() {
         </Route>
         <Route path="/admin" element={<AdminRoute />}>
           <Route path="create-drive" element={<CreateDrive />} />
+          <Route path="edit-drive/:driveID" element={<EditDrive />} />
           <Route path="register-student" element={<RegisterStudent />} />
           <Route path="dashboard" element={<AdminDashboard />} />
           <Route path="view-user/:userID" element={<ViewUser />} />

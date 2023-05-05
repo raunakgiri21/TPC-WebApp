@@ -56,8 +56,8 @@ const RegisterStudent = () => {
             <Form.Item label="Email" name="email" rules={[{ required: true, message: "Please enter student's email" },{type: 'email',message: "Invalid Email"}]}>
                 <Input placeholder="Student's Email" onChange={(e) => setEmail(e.target.value)}/>
             </Form.Item>
-            <Form.Item label="Roll No." name="rollNo" rules={[{ required: true, message: "Please enter student's roll no." },{type: 'number',message: "Invalid"}]}>
-                <InputNumber placeholder='e.g. 19111' onChange={(e) => setRollNo(e)}/>
+            <Form.Item label="Roll No." name="rollNo" rules={[{ required: true, message: "Please enter student's roll no." }]}>
+                <Input placeholder='e.g. 19111' onChange={(e) => setRollNo(e.target.value)}/>
             </Form.Item>
             <Form.Item label="Branch" name="branch" rules={[ {required: true}]}>
                 <Select placeholder="Select Branch" onChange={(e) => setBranch(e)}>
@@ -81,7 +81,7 @@ const RegisterStudent = () => {
                 </Select>
             </Form.Item>
             <Form.Item  label="Date of Birth" name="dob" rules={[ {required: true}]}>
-                <DatePicker onChange={(e) => setDob(moment(e).format('DD/MM/YYYY'))}/>
+                <DatePicker onChange={(e) => setDob(e)}/>
             </Form.Item>
             <Form.Item label="OverAll CGPA" name="overAllCGPA" rules={[{ required: true}]}>
                 <Input placeholder='e.g. 8.4' onChange={(e) => setOverAllCGPA(e.target.value)}/>

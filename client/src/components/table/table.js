@@ -40,21 +40,33 @@ for (let i = 0; i < 100; i++) {
     rollNo: `London, Park Lane no. ${i}`,
   });
 }
-const TableComponent = () => {
+const TableComponent = ({branch,search,rollNo,trigger}) => {
     const [data,setData] = useState([]);
 
     useEffect(() => {
         loadData();
-    },[])
+    },[trigger])
 
     const loadData = async() => {
-        try {
-            const _data = await axios.get('/auth');
-            setData(_data?.data);
-        } catch (error) {
-            toast.error(error?.response?.data?.error || 'Error fetching data!')
-            console.log(error)
+      try {
+        const queryStrings = {
+          params: {}
         }
+        if(search) {
+          queryStrings.params['search'] = search;
+        }
+        if(branch) {
+          queryStrings.params['branch'] = branch;
+        }
+        if(rollNo) {
+          queryStrings.params['rollNo'] = rollNo;
+        }
+        const _data = await axios.get('/auth',queryStrings);
+        setData(_data?.data);
+      } catch (error) {
+          toast.error(error?.response?.data?.error || 'Error fetching data!')
+          console.log(error)
+      }
     }
     return (
         <Table

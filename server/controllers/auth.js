@@ -136,7 +136,18 @@ const login = async(req,res) => {
 
 const getAllUsers = async(req,res) => {
     try {
-        const users = await User.find({}).select('-password');
+        const {branch,search,rollNo} = req.query;
+        const queryObject = {}
+        if(branch){
+            queryObject.branch = branch ;
+        }
+        if(rollNo){
+            queryObject.rollNo = {$regex: rollNo, $options: 'i'};
+        }
+        if(search){
+            queryObject.name = {$regex: search, $options: 'i'};
+        }
+        const users = await User.find(queryObject).select('-password');
         res.status(200).json(users);
     } catch (error) {
         res.status(400).json({msg : "Unable to get users data!"});
@@ -156,9 +167,9 @@ const getUserByID = async(req,res) => {
 
 const updateUser = async(req,res) => {
     try {
-        console.log(req.body)
-        const hashedPassword = await hashPassword(req.body.password);
-        const user = await User.findByIdAndUpdate(req.params.userID,{...req.body,password: hashedPassword},{new: true});
+        // console.log(req.body)
+        // const hashedPassword = await hashPassword(req.body?.password);
+        const user = await User.findByIdAndUpdate(req.params.userID,{...req.body},{new: true});
         res.status(200).json({user: {
             userID: user._id,
             name: user.name,

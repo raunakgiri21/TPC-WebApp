@@ -1,19 +1,13 @@
-import { useState, useEffect } from "react";
-import { useAuth } from "../../context/auth"
+import { useState} from "react";
 // import UserMenu from "../../components/nav/UserMenu";
 import TableComponent from "../../components/table/Table";
-import moment from 'moment'
-import { Checkbox, InputNumber, Input, Button } from "antd";
+import { Checkbox, Input, Button, Row, Col } from "antd";
 
 const AdminDashboard = () => {
-    const [auth,setAuth] = useAuth();
-    const [userInfo,setInfo] = useState({});
-
-    useEffect(() => {
-        const data = auth.user;
-        const dob = moment(data.dob).format('DD-MM-YYYY')
-        setInfo({...data,dob: dob})
-    },[])
+    const [branch,setBranch] = useState([])
+    const [search,setSearch] = useState('')
+    const [rollNo,setRollNo] = useState('')
+    const [trigger,setTrigger] = useState(true)
 
     return (
         <>
@@ -27,14 +21,34 @@ const AdminDashboard = () => {
                         <h5 className='p-3 mt-2 mb-2 rounded text-center' >
                             Filter By Branch
                         </h5>
-                        <Checkbox value="ME">ME</Checkbox>
-                        <Checkbox value="CE">CE</Checkbox>
-                        <Checkbox value="EE">EE</Checkbox>
-                        <Checkbox value="CHE">CHE</Checkbox>
-                        <Checkbox value="ETE">ETE</Checkbox>
-                        <Checkbox value="CSE">CSE</Checkbox>
-                        <Checkbox value="INS">INS</Checkbox>
-                        <Checkbox value="IPE">IPE</Checkbox>
+                        <Checkbox.Group value={branch} onChange={e => {setTrigger(prev => !prev);setBranch(e);setSearch('');setRollNo('')}}>
+                            <Row>
+                                <Col span={8}>
+                                    <Checkbox value="ME">ME</Checkbox>                                    
+                                </Col>
+                                <Col span={8}>
+                                    <Checkbox value="CE">CE</Checkbox>
+                                </Col>
+                                <Col span={8}>
+                                    <Checkbox value="EE">EE</Checkbox>
+                                </Col>
+                                <Col span={8}>
+                                    <Checkbox value="CHE">CHE</Checkbox>
+                                </Col>
+                                <Col span={8}>
+                                    <Checkbox value="ETE">ETE</Checkbox>
+                                </Col>
+                                <Col span={8}>
+                                    <Checkbox value="CSE">CSE</Checkbox>
+                                </Col>
+                                <Col span={8}>
+                                    <Checkbox value="INS">INS</Checkbox>
+                                </Col>
+                                <Col span={8}>
+                                    <Checkbox value="IPE">IPE</Checkbox>
+                                </Col>
+                            </Row>
+                        </Checkbox.Group>
                     </div>
                     <hr/>
                     <div className='container'>
@@ -42,17 +56,17 @@ const AdminDashboard = () => {
                             Search by Roll No.
                         </h5>
                         <div className="d-flex justify-content-between">
-                        <InputNumber placeholder="Roll No." min={0} size="small"/>
-                        <Button>Search</Button>
+                        <Input placeholder="Roll No." min={0} size="small" value={rollNo} onChange={e => setRollNo(e.target.value)}/>
+                        <Button onClick={() => {setTrigger(prev => !prev);setBranch([]);setSearch('')}}>Search</Button>
                         </div>
                     </div>
                     <hr/>
                 </div>    
                 <div className="col-md-9">
                     <div className="mt-2 mb-2 w-25">
-                        <Input placeholder="Search by name"/>
+                        <Input placeholder="Search by name" value={search} onChange={(e) => {setTrigger(prev => !prev);setSearch(e.target.value);setRollNo('')}}/>
                     </div>
-                    <TableComponent/>
+                    <TableComponent branch={branch} search={search} rollNo={rollNo} trigger={trigger}/>
                 </div>
             </div>
         </div>

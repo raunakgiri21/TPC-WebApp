@@ -2,13 +2,9 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { toast } from "react-hot-toast";
 import { Form, Input, InputNumber, Select, DatePicker, Button } from "antd";
-import { Navigate, useNavigate, useParams } from "react-router-dom";
-
-import dayjs from 'dayjs';
-import customParseFormat from 'dayjs/plugin/customParseFormat';
+import { useNavigate, useParams } from "react-router-dom";
 
 const ViewUser = () => {
-    dayjs.extend(customParseFormat);
 
     const [name, setName] = useState('');
     const [email,setEmail] = useState('');
@@ -16,6 +12,7 @@ const ViewUser = () => {
     const [branch,setBranch] = useState('');
     const [caste,setCaste] = useState('');
     const [dob,setDob] = useState('')
+    const [isAdmin,setIsAdmin] = useState(false)
     const [prevDob,setPrevDob] = useState('')
     const [overAllCGPA,setOverAllCGPA] = useState('')
     const [backlogCount,setBacklogCount] = useState(0);
@@ -53,8 +50,9 @@ const ViewUser = () => {
             setIsTier1Placed(_data.data.isT1Placed)
             setIsTier2Placed(_data.data.isT2Placed)
             setAddress(_data.data.address)
-            setPrevDob(_data.data.dob.slice(0,10))
+            setPrevDob(_data?.data?.dob?.slice(0,10))
             setLoading(false)
+            setIsAdmin(_data?.data?.isAdmin)
         } catch (error) {
             toast.error("Error fetching user details!")
             console.log(error)
@@ -69,6 +67,7 @@ const ViewUser = () => {
                 name,email,rollNo,branch,caste,dob,overAllCGPA,backlogCount,_12thPercent,_10thPercent,isT1Placed: isTier1Placed,isT2Placed: isTier2Placed,isBlacklisted,address
             }
             const {data} = await axios.put(`/auth/register-user/${params.userID}`,_data)
+            navigate('/admin/dashboard')
             toast.success(`SuccessFully Updated User!`)
         } catch (error) {
             console.log(error)
@@ -103,8 +102,8 @@ const ViewUser = () => {
             <Form.Item label="Email" name="email" rules={[{ required: true, message: "Please enter student's email" },{type: 'email',message: "Invalid Email"}]}>
                 <Input placeholder="Student's Email" onChange={(e) => setEmail(e.target.value)}/>
             </Form.Item>
-            <Form.Item label="Roll No." name="rollNo" rules={[{ required: true, message: "Please enter student's roll no." },{type: 'number',message: "Invalid"}]}>
-                <InputNumber placeholder='e.g. 19111' onChange={(e) => setRollNo(e)}/>
+            <Form.Item label="Roll No." name="rollNo" rules={[{ required: true, message: "Please enter student's roll no." }]}>
+                <Input placeholder='e.g. 19111' onChange={(e) => setRollNo(e.target.value)}/>
             </Form.Item>
             <Form.Item label="Branch" name="branch" rules={[ {required: true}]}>
                 <Select placeholder="Select Branch" onChange={(e) => setBranch(e)}>
@@ -164,7 +163,7 @@ const ViewUser = () => {
             </Form.Item>
                 <div className="d-flex justify-content-evenly text-center">
                     <Button type="primary" htmlType="submit">Update</Button>
-                    <Button type="primary" danger onClick={deleteButtonHandler}>Delete</Button>
+                    <Button type="primary" danger onClick={deleteButtonHandler} hidden={isAdmin}>Delete</Button>
                 </div>
             </Form>
     ):<h5>Loading</h5>

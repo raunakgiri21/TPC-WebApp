@@ -1,4 +1,7 @@
 const Drive = require('../models/drive')
+const User = require('../models/user')
+const excelJS = require('exceljs')
+const moment = require('moment');
 
 const getPost = async(req,res) => {
     try {
@@ -92,4 +95,51 @@ const deletePost = async(req,res) => {
     }
 }
 
-module.exports = {createPost, getPost, getPostByID, updatePost, deletePost, applyToPost, withdrawFromPost}
+const generateExcelSheet = async(req,res) => {
+    try {
+        const workbook = new excelJS.Workbook();
+        const workSheet = workbook.addWorksheet("Students Data");
+        
+        workSheet.columns = [
+            {header: "S.No.",key: "s_no"},
+            {header: "Name",key: "name", width: "20"},
+            {header: "Email",key: "email", width: "20"},
+            {header: "Branch",key: "branch", width: "10"},
+            {header: "Roll No.",key: "rollNo", width: "10"},
+            {header: "CGPA",key: "overAllCGPA", width: "10"},
+            {header: "12th Percentage",key: "_12thPercent", width: "15"},
+            {header: "10th Percentage",key: "_10thPercent", width: "15"},
+            {header: "DOB",key: "newDob", width: "12"},
+        ];
+        
+        let counter = 1;
+        
+        const driveData = await Drive.findById(req.params.driveID);
+        const userList = driveData?.appliedBy;
+        const userData = await User.find({'_id': { $in: userList }});
+
+        userData.forEach((user) => {
+            user.s_no = counter++;
+            user.newDob = moment(user.dob).format("DD/MM/YYYY")
+            workSheet.addRow(user);
+        })
+
+        workSheet.getRow(1).eachCell((cell) => {
+            cell.font = {bold: true}
+        })
+
+        res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        res.setHeader("Content-Disposition", "attachment; filename=" + "Report.xlsx");
+        workbook.xlsx.write(res)
+            .then(() => {
+                res.status(200);
+                console.log('File write done........');
+            });
+
+    } catch (error) {
+        res.status(400).json({msg: "error while generating excel sheet!"})
+        console.log(error)
+    }
+}
+
+module.exports = {createPost, getPost, getPostByID, updatePost, deletePost, applyToPost, withdrawFromPost, generateExcelSheet}

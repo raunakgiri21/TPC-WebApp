@@ -108,6 +108,33 @@ const ViewDrive = () => {
             toast.error("Error opening edit form!")
         }
     }
+
+    const downloadButtonHandler = async() => {
+        try {
+            const options = {
+                headers:
+                {
+                    'Content-Disposition': "attachment; filename=template.xlsx",
+                    'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+                },
+                responseType: 'arraybuffer',
+            }
+            axios.post(`/drive/generate-excel/${drive._id}`, null, options)
+                .then((response) => {
+                const url = window.URL.createObjectURL(new Blob([response.data]));
+                const link = document.createElement('a');
+                link.href = url;
+                link.setAttribute('download', 'Applied_By.xlsx');
+                document.body.appendChild(link);
+                link.click();
+                toast.success("Downloaded SuccessFully")
+            })
+        } catch (error) {
+            setLoading(false)
+            toast.error("Error while downloading!")
+        }
+    }
+    
     const countdownFinish = async() => {
         try {
             if(new Date() > (new Date(drive?.applyBefore)))
@@ -161,7 +188,10 @@ const ViewDrive = () => {
                 <dd className="col-sm-9">{moment(drive?.applyBefore).format('hh:mm A / DD-MM-YYYY')}</dd>
             </dl>
                 {auth?.user?.role === 'Admin' ?
+                <div className="d-flex justify-content-between text-center">
                 <Button type="primary" onClick={() => editButtonHandler()}>Edit</Button>
+                <Button type="default" onClick={() => downloadButtonHandler()}>Download</Button>
+                </div>
                 : (isApplied ? 
                 <Button type="primary" hidden={isExpired} onClick={withdrawButtonHandler} disabled={!isEligible} danger>
                     Withdraw

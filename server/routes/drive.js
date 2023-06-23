@@ -5,7 +5,7 @@ const router = express.Router();
 
 
 // controllers
-const {createPost,getPost,getPostByID,updatePost,deletePost,applyToPost,withdrawFromPost} = require('../controllers/drive');
+const {createPost,getPost,getPostByID,updatePost,deletePost,applyToPost,withdrawFromPost,generateExcelSheet} = require('../controllers/drive');
 const { authenticationMiddleware, isAdminMiddleware } = require('../middleware/auth');
 
 
@@ -17,6 +17,7 @@ router.put('/withdraw',authenticationMiddleware,withdrawFromPost)
 router.post('/post',authenticationMiddleware,isAdminMiddleware,createPost)
 router.put('/update-post/:postID',authenticationMiddleware,isAdminMiddleware,updatePost)
 router.delete('/delete-post/:postID',authenticationMiddleware,isAdminMiddleware,deletePost)
+router.post('/generate-excel/:driveID',authenticationMiddleware,isAdminMiddleware,generateExcelSheet)
 // router.post('/login',login)
 // router.post('/register-user',authenticationMiddleware,isAdminMiddleware,registerUser)
 

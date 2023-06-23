@@ -17,6 +17,8 @@ const ViewDrive = () => {
     const [drive,setDrive] = useState({})
     const [isExpired,setIsExpired] = useState(true)
     const [isApplied,setIsApplied] = useState(false)
+    const [isEligible,setIsEligible] = useState(true)
+    const [reason,setReason] = useState("")
     const [trigger,setTrigger] = useState(false)
     const [loading,setLoading] = useState(true)
     // hooks
@@ -33,6 +35,38 @@ const ViewDrive = () => {
         try {
             setLoading(true)
             const {data} = await axios.get(`/drive/${params.driveID}`)
+            if(auth.user?.isBlacklisted){
+                setReason("You are blacklisted for the time being!")
+                setIsEligible(false)
+            }
+            else if(auth.user?.isT1Placed){
+                setReason("You are already placed in a Tier 1 Company!")
+                setIsEligible(false)
+            }
+            else if(data?.drive?.tier ===2 && auth.user?.isT2Placed === data?.drive?.tierType){
+                setReason(`You are already placed in Tier 2 ${_tierType[data?.drive?.tier]}`)
+                setIsEligible(false)
+            }
+            else if(!data?.drive?.eligibleBranch?.includes(auth.user.branch)){
+                setReason("Your Branch is not eligible for this drive!")
+                setIsEligible(false)
+            }
+            else if((data?.drive?.backlogsAllowed !== "Yes") && ((data?.drive?.backlogsAllowed === "No" && auth.user?.backlogCount) || (auth.user?.backlogCount > Number(data?.drive?.backlogsAllowed)))){
+                setReason(`Only ${data?.drive?.backlogsAllowed} backlog(s) is/are allowed, but you have ${auth.user?.backlogCount} backlog(s)!`)
+                setIsEligible(false)
+            }
+            else if(Number(data?.drive?.cgpaRequired) > Number(auth.user?.overAllCGPA)){
+                setReason(`Your CGPA (${auth.user?.overAllCGPA}) doesn't meet the drive's eligibilty criteria!`)
+                setIsEligible(false)
+            }
+            else if(Number(data?.drive?._10thPercentRequired) > Number(auth.user?._10thPercent)){
+                setReason(`Your have low Percentage in 10th!`)
+                setIsEligible(false)
+            }
+            else if(Number(data?.drive?._12thPercentRequired) > Number(auth.user?._12thPercent)){
+                setReason(`Your have low Percentage in 12th!`)
+                setIsEligible(false)
+            }
             setDrive(data?.drive)
             setIsApplied(data?.drive?.appliedBy?.includes(auth?.user?.userID))
             setIsExpired(new Date() > (new Date(data?.drive?.applyBefore)))
@@ -129,16 +163,16 @@ const ViewDrive = () => {
                 {auth?.user?.role === 'Admin' ?
                 <Button type="primary" onClick={() => editButtonHandler()}>Edit</Button>
                 : (isApplied ? 
-                <Button type="primary" hidden={isExpired} onClick={withdrawButtonHandler} danger>
+                <Button type="primary" hidden={isExpired} onClick={withdrawButtonHandler} disabled={!isEligible} danger>
                     Withdraw
                 </Button> :
-                <Button type="primary" hidden={isExpired} onClick={applyButtonHandler}>
+                <Button type="primary" hidden={isExpired} onClick={applyButtonHandler} disabled={!isEligible}>
                     Apply
                 </Button>)
                 }
             </div>
             <div className="col-md-2">
-                <h5 className={`text-${auth?.user?.role === 'Admin' ? 'info': (isExpired?'danger':'success')} p-5 text-center`}>{auth?.user?.role === 'Admin' ? 'Admin' :(isExpired? 'Expired' : 'Eligible')}</h5>
+                <h5 className={`text-${auth?.user?.role === 'Admin' ? 'info': (isExpired?'danger':isEligible?'success':'warning')} p-5 text-center`}>{auth?.user?.role === 'Admin' ? 'Admin' :(isExpired? 'Expired' : isEligible? 'Eligible' : 'Not Eligible')}<h6 className={`text-muted text-center p-1`} hidden={isEligible || isExpired}><br></br>{reason}</h6></h5>
                 {!isExpired ? 
                 <div className="d-flex flex-column align-items-center">
                     <h5>Time Remaining</h5>

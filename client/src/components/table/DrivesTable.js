@@ -46,7 +46,7 @@ const data = [
     description: 'My name is John Brown, I am 32 years old, living in New York No. 1 Lake Park.',
   },
 ];
-const DrivesTable = () => {
+const DrivesTable = ({myDrive=false}) => {
     // state
     const [data,setData] = useState([])
     const [auth,setAuth] = useAuth()
@@ -60,7 +60,7 @@ const DrivesTable = () => {
             const _tier = ['I','II','III'];
             const _tierType = ['Core','IT','Others'];
             const {data} = await axios.get('/drive')
-            const _data = data?.drive.map(d => {
+            let _data = data?.drive.map(d => {
                 return {
                     _id: d._id,
                     key: d._id,
@@ -71,6 +71,11 @@ const DrivesTable = () => {
                     status: d?.appliedBy?.includes(auth?.user?.userID) ? 'Applied' : '-',
                 }
             })
+            if(myDrive){
+              _data = _data?.filter(d => {
+                return (d.status === 'Applied')
+              })
+            }
             setData(_data)
         } catch (error) {
             console.log(error)

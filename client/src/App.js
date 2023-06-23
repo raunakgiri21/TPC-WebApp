@@ -15,6 +15,7 @@ import CreateDrive from "./pages/admin/CreateDrive";
 import EditDrive from "./pages/admin/EditDrive";
 import RegisterStudent from "./pages/admin/RegisterStudent";
 import Drives from "./pages/user/Drives";
+import MyDrives from "./pages/user/MyDrives";
 import ViewDrive from "./pages/user/ViewDrive";
 
 // import
@@ -29,8 +30,8 @@ function App() {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/" element={<PrivateRoute />}>
-          <Route path="" element={<Home />} />
-          <Route path="drives" element={<Drives />} />
+          <Route path="" element={<Drives />} />
+          <Route path="user-drives" element={<MyDrives />} />
           <Route path="view-drive/:driveID" element={<ViewDrive />} />
           <Route path="user/dashboard" element={<UserDashboard />} />
         </Route>

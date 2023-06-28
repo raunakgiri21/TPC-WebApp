@@ -202,7 +202,7 @@ const ViewDrive = () => {
                 }
             </div>
             <div className="col-md-2">
-                <h5 className={`text-${auth?.user?.role === 'Admin' ? 'info': (isExpired?'danger':isEligible?'success':'warning')} p-5 text-center`}>{auth?.user?.role === 'Admin' ? 'Admin' :(isExpired? 'Expired' : isEligible? 'Eligible' : 'Not Eligible')}<h6 className={`text-muted text-center p-1`} hidden={isEligible || isExpired}><br></br>{reason}</h6></h5>
+                <h5 className={`text-${auth?.user?.role === 'Admin' ? 'info': (isExpired?'danger':isEligible?'success':'warning')} p-5 text-center`}>{auth?.user?.role === 'Admin' ? 'Admin' :(isExpired? 'Expired' : isEligible? 'Eligible' : 'Not Eligible')}<h6 className={`text-muted text-center p-1`} hidden={isEligible || isExpired}><br></br>{auth?.user?.role === 'Admin' ? '' : reason}</h6></h5>
                 {!isExpired ? 
                 <div className="d-flex flex-column align-items-center">
                     <h5>Time Remaining</h5>
